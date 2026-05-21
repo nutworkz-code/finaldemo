@@ -1,0 +1,33 @@
+backend:
+  image:
+    repository: opsinsight-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8000
+  env:
+    DATABASE_URL: postgresql://opsinsight:opsinsight@{{ .Release.Name }}-postgres:5432/opsinsight
+    SECRET_KEY: change-me-in-production
+
+frontend:
+  image:
+    repository: opsinsight-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 80
+
+postgres:
+  image:
+    repository: postgres
+    tag: 16-alpine
+  storage: 5Gi
+  env:
+    POSTGRES_USER: opsinsight
+    POSTGRES_PASSWORD: opsinsight
+    POSTGRES_DB: opsinsight
+
+ingress:
+  enabled: true
+  host: opsinsight.local
+  className: nginx
